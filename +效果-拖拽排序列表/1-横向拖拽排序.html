@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./1-index.js"></script>
+    <style>
+        .box {
+            border: 2px solid black;
+            padding: 5px;
+            background-color: turquoise;
+            display: flex;
+            align-items: end;
+            margin: 10px;
+            height: 48px;
+            position: relative;
+        }
+
+        .cube {
+            border: 2px solid black;
+            border-radius: 4px;
+            padding: 10px 30px;
+            text-align: center;
+            transition: 0.5s;
+            position: absolute;
+        }
+
+        .cube-dep {
+            border: 2px solid black;
+            border-radius: 4px;
+            padding: 10px 30px;
+            text-align: center;
+            transition: 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section>
+        <h1>🍋横向拖拽排序 | transform实现 | 交换效果 | 绝对定位</h1>
+
+        <ul>
+            <li>
+                <b>实现思路</b>
+                <p>这里有两种实现思路,一是容器元素设置为相对定位,子元素设置为绝对定位,二是不设置定位,子元素设置transform:translateX也行</p>
+                <p>在拖动过程中,比如果把第7位的元素拖动到第3位,那么对于这个7号元素来讲,可以直接设置其left属性,属性值就是map中前2位元素的宽度之和,而从第4位元素之后的元素也都要更新其left样式的值</p>
+            </li>
+        </ul>
+    </section>
+
+
+    <div class="box" id="box">
+        <div class="cube" style="width:20px;background: #00FFFF" draggable="true">1</div>
+        <div class="cube" style="width:30px;background: #FF1493" draggable="true">2</div>
+        <div class="cube" style="width:50px;background: #800080" draggable="true">3</div>
+        <div class="cube" style="width:30px;background: #FFA500" draggable="true">4</div>
+        <div class="cube" style="width:20px;background: #16A085" draggable="true">5</div>
+        <div class="cube" style="width:70px;background: #778899" draggable="true">6</div>
+        <div class="cube" style="width:45px;background: #B0E0E6" draggable="true">7</div>
+    </div>
+
+    <script>
+        DragBasePosition.register(box, 'swap')
+
+    </script>
+
+
+
+    <section>
+        <h1>🍋横向拖拽排序 | transform实现 | 插入效果 | 绝对定位</h1>
+    </section>
+
+    <div class="box" id="box2">
+        <div class="cube" style="width:20px;background: #00FFFF" draggable="true">1</div>
+        <div class="cube" style="width:30px;background: #FF1493" draggable="true">2</div>
+        <div class="cube" style="width:50px;background: #800080" draggable="true">3</div>
+        <div class="cube" style="width:30px;background: #FFA500" draggable="true">4</div>
+        <div class="cube" style="width:20px;background: #16A085" draggable="true">5</div>
+        <div class="cube" style="width:70px;background: #778899" draggable="true">6</div>
+        <div class="cube" style="width:45px;background: #B0E0E6" draggable="true">7</div>
+    </div>
+    <script>
+        DragBasePosition.register(box2, 'insert')
+    </script>
+
+
+    <section>
+        <h1>🍇横向拖拽排序 | transform实现 | 插入效果-实时更新 | 绝对定位 </h1>
+    </section>
+    <div class="box" id="box3">
+        <div class="cube" style="width:20px;background: #00FFFF" draggable="true">1</div>
+        <div class="cube" style="width:30px;background: #FF1493" draggable="true">2</div>
+        <div class="cube" style="width:50px;background: #800080" draggable="true">3</div>
+        <div class="cube" style="width:30px;background: #FFA500" draggable="true">4</div>
+        <div class="cube" style="width:20px;background: #16A085" draggable="true">5</div>
+        <div class="cube" style="width:70px;background: #778899" draggable="true">6</div>
+        <div class="cube" style="width:45px;background: #B0E0E6" draggable="true">7</div>
+    </div>
+    <script>
+        DragBasePosition.register(box3, 'insert', true)
+
+    </script>
+
+    <section>
+        <h1>🍇横向拖拽排序 | transform实现 | 交换效果-实时更新 | 绝对定位 </h1>
+    </section>
+    <div class="box" id="box4">
+        <div class="cube" style="width:20px;background: #00FFFF" draggable="true">1</div>
+        <div class="cube" style="width:30px;background: #FF1493" draggable="true">2</div>
+        <div class="cube" style="width:50px;background: #800080" draggable="true">3</div>
+        <div class="cube" style="width:30px;background: #FFA500" draggable="true">4</div>
+        <div class="cube" style="width:20px;background: #16A085" draggable="true">5</div>
+        <div class="cube" style="width:70px;background: #778899" draggable="true">6</div>
+        <div class="cube" style="width:45px;background: #B0E0E6" draggable="true">7</div>
+    </div>
+    <script>
+        DragBasePosition.register(box4, 'swap', true)
+
+    </script>
+
+
+    <section>
+        <h1>🟡横向拖拽排序 | transform实现 | 交换效果-实时更新 | 不依赖定位 </h1>
+        <ul>
+            <h3>实现思路</h3>
+            <p><b>tips : </b>这里有一个前提说明,如果元素具有css变换 transform:translateX(),则其获取的getBoundindClientRect会有所不同</p>
+            <li>
+                如果不依赖定位的话,难点在于,元素的原本位置或者说偏移起点是不确定的,所以最好是确定一个统一的偏移起点,由于元素之间不存在间隙,所以这个偏移起点应该是在第一个元素的getBoundingClientRect().x
+                这个偏移起点设置为pd
+            </li>
+            <li>
+                如果不依赖定位,那么计算一个元素的偏移量,需要2个map,其中
+                map1用于存储当前DOM和位置,
+                map2用于存储原始位置下,每一个元素的矩形区域信息,即getBoundingClientRect()的值,是实际上这里有用的值是getBoundingClientRect().x,这个值是每个元素计算偏移量的起点
+
+                在实际计算过程中,可能每个DOM的尺寸会变化因此,可能需要动态计算原始位置,也就是getBoundingClientRect().x-translateX
+            </li>
+            <li>在所有元素的位置信息更新map1之后,这里的排序规则如下
+                对于第N号元素来讲,其偏移量应该是前N-1个元素的宽度加上pd的值,当然这个值是绝对定位下的偏移量,因为现在不是绝对定位,所以最终结果应该是
+                offset=(前N-1个元素的宽度)+pd-(N号元素最原始的偏移位置,也就是map2中的x值)
+            </li>
+            <h3>改良</h3>
+            <li>
+                在实际场景中,为了避免拖拽方块子元素带来的影响,应该在进入拖拽时,给每一个拖拽方块设置一个css样式,item *{point-events:none}
+                并在拖拽结束事后恢复,(dragend事件),这是因为dragenter事件只会触发1次,在这个demo中,触发后会进入transition动画,然后开始移动元素
+                在移动元素的过程中,如果元素存在子元素,则,会让dragenter冒泡,导致重复触发,
+            </li>
+            <h3>注意</h3>
+            <li>
+                实际的一维拖拽场景中,每个元素的宽度应该一致,想象以下,如果一个很短的itemA和一个很长的itemB来交换,鼠标拖着短的itemA和长的itemB交换,交换之后你的鼠标还是在itemB上,就会导致再次交换,从而反复交换
+            </li>
+
+        </ul>
+
+    </section>
+
+    <div class="box" id="box5">
+        <div class="cube-dep" style="width:20px;background: #00FFFF" draggable="true">1</div>
+        <div class="cube-dep" style="width:30px;background: #FF1493" draggable="true">2</div>
+        <div class="cube-dep" style="width:50px;background: #800080" draggable="true">3</div>
+        <div class="cube-dep" style="width:30px;background: #FFA500" draggable="true">4</div>
+        <div class="cube-dep" style="width:20px;background: #16A085" draggable="true">5</div>
+        <div class="cube-dep" style="width:70px;background: #778899" draggable="true">6</div>
+        <div class="cube-dep" style="width:45px;background: #B0E0E6" draggable="true">7</div>
+    </div>
+    <script>
+        Drag.register(box5, 'swap')
+
+    </script>
+
+    <section>
+        <h1>🟡横向拖拽排序 | transform实现 | 插入效果-实时更新 | 不依赖定位 </h1>
+    </section>
+
+    <div class="box" id="box6">
+        <div class="cube-dep" style="width:60px;background: #00FFFF" draggable="true">1</div>
+        <div class="cube-dep" style="width:70px;background: #FF1493" draggable="true">2</div>
+        <div class="cube-dep" style="width:80px;background: #800080" draggable="true">3</div>
+        <div class="cube-dep" style="width:130px;background: #FFA500" draggable="true">4</div>
+        <div class="cube-dep" style="width:120px;background: #16A085" draggable="true">5</div>
+        <div class="cube-dep" style="width:170px;background: #778899" draggable="true">6</div>
+        <div class="cube-dep" style="width:145px;background: #B0E0E6" draggable="true">7</div>
+    </div>
+    <script>
+        Drag.register(box6, 'insert')
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- ------------------------------------ -->
+    <style>
+        .tank {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            border: 1px solid;
+        }
+        .tank .box{flex:1;overflow: hidden;}
+        .tank .placeholder{width: 150px;}
+
+    </style>
+    <div class="tank">
+        <div class="box" id="box9">
+            <div class="cube" style="width:20px;background: #00FFFF" draggable="true">1</div>
+            <div class="cube" style="width:30px;background: #FF1493" draggable="true">2</div>
+            <div class="cube" style="width:50px;background: #800080" draggable="true">3</div>
+            <div class="cube" style="width:30px;background: #FFA500" draggable="true">4</div>
+            <div class="cube" style="width:20px;background: #16A085" draggable="true">5</div>
+            <div class="cube" style="width:70px;background: #778899" draggable="true">6</div>
+            <div class="cube" style="width:45px;background: #B0E0E6" draggable="true">7</div>
+        </div>
+        <div class="placeholder">🟡🟨🍋</div>
+    </div>
+
+    <script>
+        DragBasePosition.register(box9, 'insert', true)
+
+    </script>
+
+
+
+
+</body>
+
+</html>

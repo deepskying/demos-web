@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .tips{color: steelblue;}
+    </style>
+</head>
+<body>
+    <h1 class="tips">按下按键以查看键名和键码</h1>
+    <div id="box"></div>
+    <script>
+        const helpkey=['Control','Shift','Alt','Meta']
+        document.body.onkeydown=(e)=>{
+            // e.preventDefault()
+            // e.stopPropagation()
+            box.innerHTML=`
+                <h1>组合键:${e.metaKey?"Meta":''} ${e.ctrlKey?'Control':''} ${e.shiftKey?"Shift":""} ${e.altKey?"Alt":""} ${helpkey.includes(e.key) ?'': e.key}</h1>
+                <h1>键名:${e.key}</h1>
+                <h1>位置键名:${e.code}</h1>   
+            `
+        }
+    </script>
+    
+
+</body>
+</html>

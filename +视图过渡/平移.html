@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    
+    <style>
+        :root{
+            --tname:'xxx'
+        }
+        .tank1 {
+            width: 200px;
+            height: 200px;
+            border: 2px solid black;
+        }
+        .cube {
+            view-transition-name: cube;
+            border: 2px solid;
+            padding: 10px;
+            width: 100px;
+            height: 100px;
+            background-color: aqua;
+            display: inline-block;
+            transition: 1s;
+            transform: translate(0,0);
+        }
+
+        ::view-transition-old(cube){
+            transform: translate(var(--x),var(--y));
+        }
+        
+    </style>
+    <div class="tank1" id="t1">
+        <div class="cube" id="xxx"></div>
+    </div>
+
+    <div class="tank1" id="t2"></div>
+    <script>
+        function change(){
+            const rect1=xxx.getBoundingClientRect()
+            t2.appendChild(xxx)
+            const rect2=xxx.getBoundingClientRect()
+            console.log(rect1,rect2)
+            const x=rect2.x-rect1.x
+            const y=rect2.y-rect1.y
+            document.body.style.setProperty('--x',x+'px')
+            document.body.style.setProperty('--y',y+'px')
+
+            // xxx.style.transform=`translate(${x}px,${y}px)`
+        }
+        xxx.addEventListener('click',(e)=>{
+            document.startViewTransition(change)
+
+        })
+
+    </script>
+</body>
+</html>
