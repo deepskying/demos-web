@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D翻转卡片效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .description {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+        
+        /* 卡片容器 */
+        .card-container {
+            perspective: 1000px;
+            width: 300px;
+            height: 400px;
+            margin: 0 auto 40px;
+        }
+        
+        /* 卡片主体 */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+        }
+        
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        /* 卡片两面共享的样式 */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        /* 卡片正面 */
+        .card-front {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+        }
+        
+        /* 卡片背面 */
+        .card-back {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #333;
+            transform: rotateY(180deg);
+        }
+        
+        /* 卡片图标 */
+        .card-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        
+        /* 卡片标题 */
+        .card-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        /* 卡片内容 */
+        .card-content {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        /* 按钮样式 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-flip {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            min-width: 160px;
+        }
+        
+        .btn-flip:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .btn-flip:active {
+            transform: translateY(1px);
+        }
+        
+        /* 状态指示器 */
+        .status {
+            margin-top: 25px;
+            font-size: 18px;
+            color: white;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        /* 翻转方向选项 */
+        .direction-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .direction-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .direction-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .direction-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            font-weight: 600;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            .card-container {
+                width: 280px;
+                height: 380px;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                font-size: 16px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3D翻转卡片效果</h1>
+        <p class="description">点击卡片或使用下方按钮可以翻转卡片，查看正反两面的不同内容。您还可以选择不同的翻转方向。</p>
+        
+        <!-- 卡片容器 -->
+        <div class="card-container">
+            <div class="card" id="flipCard">
+                <!-- 卡片正面 -->
+                <div class="card-face card-front">
+                    <div class="card-icon">🌞</div>
+                    <h2 class="card-title">正面内容</h2>
+                    <div class="card-content">
+                        <p>这是卡片的正面。</p>
+                        <p>包含一些基本信息或介绍内容。</p>
+                        <p>点击卡片或下方按钮可以查看背面。</p>
+                    </div>
+                </div>
+                
+                <!-- 卡片背面 -->
+                <div class="card-face card-back">
+                    <div class="card-icon">🌙</div>
+                    <h2 class="card-title">背面内容</h2>
+                    <div class="card-content">
+                        <p>这是卡片的背面。</p>
+                        <p>包含更多详细信息或额外内容。</p>
+                        <p>翻转效果使用CSS 3D变换实现。</p>
+                        <p>尝试不同的翻转方向！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 控制按钮 -->
+        <div class="controls">
+            <button class="btn btn-flip" id="flipBtn">翻转卡片</button>
+        </div>
+        
+        <!-- 状态显示 -->
+        <div class="status" id="statusText">当前显示：正面</div>
+        
+        <!-- 翻转方向选项 -->
+        <div class="direction-options">
+            <div>翻转方向：</div>
+            <button class="direction-btn active" data-direction="horizontal">水平翻转</button>
+            <button class="direction-btn" data-direction="vertical">垂直翻转</button>
+            <button class="direction-btn" data-direction="diagonal">对角线翻转</button>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const flipCard = document.getElementById('flipCard');
+        const flipBtn = document.getElementById('flipBtn');
+        const statusText = document.getElementById('statusText');
+        const directionBtns = document.querySelectorAll('.direction-btn');
+        
+        // 当前翻转状态
+        let isFlipped = false;
+        let currentDirection = 'horizontal';
+        
+        // 翻转卡片函数
+        function flipCardAction() {
+            isFlipped = !isFlipped;
+            
+            // 根据方向设置不同的翻转效果
+            let transformValue = '';
+            switch(currentDirection) {
+                case 'horizontal':
+                    transformValue = isFlipped ? 'rotateY(180deg)' : 'rotateY(0)';
+                    break;
+                case 'vertical':
+                    transformValue = isFlipped ? 'rotateX(180deg)' : 'rotateX(0)';
+                    break;
+                case 'diagonal':
+                    transformValue = isFlipped ? 'rotate3d(1, 1, 0, 180deg)' : 'rotate3d(1, 1, 0, 0)';
+                    break;
+            }
+            
+            flipCard.style.transform = transformValue;
+            flipCard.classList.toggle('flipped');
+            
+            // 更新状态文本
+            statusText.textContent = `当前显示：${isFlipped ? '背面' : '正面'}`;
+            
+            // 更新按钮文本
+            flipBtn.textContent = isFlipped ? '翻转回正面' : '翻转至背面';
+        }
+        
+        // 设置翻转方向
+        function setFlipDirection(direction) {
+            currentDirection = direction;
+            
+            // 更新方向按钮状态
+            directionBtns.forEach(btn => {
+                if (btn.dataset.direction === direction) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // 如果卡片当前已翻转，应用新方向
+            if (isFlipped) {
+                let transformValue = '';
+                switch(direction) {
+                    case 'horizontal':
+                        transformValue = 'rotateY(180deg)';
+                        break;
+                    case 'vertical':
+                        transformValue = 'rotateX(180deg)';
+                        break;
+                    case 'diagonal':
+                        transformValue = 'rotate3d(1, 1, 0, 180deg)';
+                        break;
+                }
+                flipCard.style.transform = transformValue;
+            } else {
+                flipCard.style.transform = '';
+            }
+        }
+        
+        // 事件监听
+        flipBtn.addEventListener('click', flipCardAction);
+        
+        // 卡片本身也可以点击翻转
+        flipCard.addEventListener('click', flipCardAction);
+        
+        // 方向按钮事件
+        directionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setFlipDirection(btn.dataset.direction);
+            });
+        });
+        
+        // 初始状态
+        setFlipDirection('horizontal');
+        
+        // 添加键盘支持：按空格键或回车键翻转卡片
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                flipCardAction();
+            }
+        });
+    </script>
+</body>
+</html>
